@@ -26,8 +26,8 @@ class CurrencyServer:
 
     def update_rate(self):
         while True:
+            [print(''.join(random.choice(string.ascii_letters + string.digits + string.punctuation) for _ in range(10))) for _ in range(5)]
             with self.lock:
-                [print(''.join(random.choice(string.ascii_letters + string.digits + string.punctuation) for _ in range(10))) for _ in range(5)]
                 change = random.uniform(self.amplitude[0], self.amplitude[1])  # Изменение курса
                 self.current_rate = max(self.limit[0], min(self.current_rate + change, self.limit[1]))  # Не допускаем значений, заходящих за рамки лимитов
                 self.history.append((time.time(), self.current_rate))  # Сохраняем текущее время и курс
@@ -69,6 +69,8 @@ def main(page: ft.Page):
 
     if page.client_storage.get("Theme") == None:
         page.client_storage.set("Theme", "1")
+    if page.client_storage.get("RoundedChart") == None:
+        page.client_storage.set("Theme", False)
 
     def change_theme(e):
         if e != "s":
@@ -97,6 +99,14 @@ def main(page: ft.Page):
                 page.theme = ft.Theme(color_scheme_seed="#ffc000")
             page.update()
 
+    def rochart(e):
+        if e != "s":
+            if rchart.value == True:
+                page.client_storage.set("RoundedChart", True)
+            elif rchart.value == False:
+                page.client_storage.set("RoundedChart", False)
+            page.update()
+
 
     optionsdd = [
         ft.dropdown.Option(key="1", text="Монетная",
@@ -113,6 +123,8 @@ def main(page: ft.Page):
     thm = ft.Dropdown(
         options=optionsdd,
         value=page.client_storage.get("Theme"), on_change=change_theme, label="Тема")
+
+    rchart = ft.Switch(label="Сгладить линию графика", on_change=rochart)
 
     change_theme("s")
 
@@ -352,6 +364,7 @@ def main(page: ft.Page):
                     )
                 )
         if page.route == "/setup":
+            rchart.value = page.client_storage.get("RoundedChart")
             page.views.append(
                 ft.View(
                     "/setup",
@@ -365,6 +378,7 @@ def main(page: ft.Page):
                                             title=ft.Text("Настройки"),
                                             subtitle=ft.Text("Отсюда веет богатством"),
                                         ),
+                                        rchart,
                                         thm,
                                         ft.Row([
                                             ft.TextButton("Назад", on_click=lambda e: page.go("/")),
@@ -718,7 +732,7 @@ def main(page: ft.Page):
                 ) for i, (_, rate) in enumerate(history)
             ]
             chart.data_series = [
-                ft.LineChartData(data_points=data_points, stroke_width=2, color=ft.colors.PRIMARY, curved=False)
+                ft.LineChartData(data_points=data_points, stroke_width=2, color=ft.colors.PRIMARY, curved=page.client_storage.get("RoundedChart"))
             ]
 
             # Добавление меток на ось Y
