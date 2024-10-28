@@ -434,7 +434,8 @@ def main(page: ft.Page):
                     vertical_alignment=ft.MainAxisAlignment.CENTER,
                     horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                     floating_action_button=ft.FloatingActionButton(icon=ft.icons.ADD,
-                                                                   on_click=lambda e: page.go("/openwall/send"))
+                                                                   on_click=lambda e: page.go("/openwall/send")),
+                        scroll=True
                 )
             )
         if page.route == "/openwall/send":
@@ -519,9 +520,12 @@ def main(page: ft.Page):
                     ],
                     vertical_alignment=ft.MainAxisAlignment.CENTER,
                     horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        scroll=True
                 )
             )
         if page.route.removeprefix("/openwall/view/") != page.route:
+            print("OK")
+
             card_id = page.route.removeprefix("/openwall/view/")
             ccard = None
 
@@ -557,6 +561,7 @@ def main(page: ft.Page):
                         ],
                         vertical_alignment=ft.MainAxisAlignment.CENTER,
                         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        scroll=True
                     )
                 )
             else:
@@ -586,7 +591,6 @@ def main(page: ft.Page):
                         ],
                         vertical_alignment=ft.MainAxisAlignment.CENTER,
                         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                        scroll=True
                     )
                 )
         page.update()
