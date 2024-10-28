@@ -5,6 +5,7 @@ import random
 import time
 import threading
 from collections import deque
+import string
 
 class ContentContainer:
     def __init__(self):
@@ -26,6 +27,7 @@ class CurrencyServer:
     def update_rate(self):
         while True:
             with self.lock:
+                [print(''.join(random.choice(string.ascii_letters + string.digits + string.punctuation) for _ in range(10))) for _ in range(5)]
                 change = random.uniform(self.amplitude[0], self.amplitude[1])  # Изменение курса
                 self.current_rate = max(self.limit[0], min(self.current_rate + change, self.limit[1]))  # Не допускаем значений, заходящих за рамки лимитов
                 self.history.append((time.time(), self.current_rate))  # Сохраняем текущее время и курс
