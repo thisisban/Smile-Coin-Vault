@@ -522,8 +522,6 @@ def main(page: ft.Page):
                 )
             )
         if page.route.removeprefix("/openwall/view/") != page.route:
-            print("OK")
-
             card_id = page.route.removeprefix("/openwall/view/")
             ccard = None
 
@@ -588,6 +586,7 @@ def main(page: ft.Page):
                         ],
                         vertical_alignment=ft.MainAxisAlignment.CENTER,
                         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        scroll=True
                     )
                 )
         page.update()
